@@ -16,12 +16,12 @@ class CreatePostInput(BaseModel):
 
 
 def raise_exception(message: str) -> None:
-    log.error("create_post_on_linkedin function failed", error=message)
+    log.error("create_post_on_linkedin_again function failed", error=message)
     raise NonRetryableError(message)
 
 
 @function.defn()
-async def create_post_on_linkedin(function_input: CreatePostInput) -> dict[str, Any]:
+async def create_post_on_linkedin_again(function_input: CreatePostInput) -> dict[str, Any]:
     try:
             if os.environ.get("LINKEDIN_ACCESS_TOKEN") is None:
                 error_message = "LINKEDIN_ACCESS_TOKEN is not set"
@@ -60,7 +60,7 @@ async def create_post_on_linkedin(function_input: CreatePostInput) -> dict[str, 
                     response.raise_for_status()
                     post_id = response.headers.get("x-restli-id", "Unknown")
     except Exception as e:
-        error_message = f"create_post_on_linkedin failed: {e}"
+        error_message = f"create_post_on_linkedin_again failed: {e}"
         raise NonRetryableError(error_message) from e
     else:
         log.info(f"Successfully created post on LinkedIn with ID: {post_id}")

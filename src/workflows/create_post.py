@@ -10,7 +10,7 @@ from restack_ai.workflow import (
 )
 
 with import_functions():
-    from src.functions.create_post_on_linkedin import CreatePostInput, create_post_on_linkedin_again
+    from src.functions.create_post_on_linkedin_again import CreatePostInput, create_post_on_linkedin_again
 
 
 @workflow.defn(description="Create a post on LinkedIn")
@@ -25,9 +25,9 @@ class CreatePostOnLinkedinWorkflow:
                 start_to_close_timeout=timedelta(seconds=120),
             )
         except Exception as e:
-            error_message = f"Error during create_post_on_linkedin: {e}"
+            error_message = f"Error during create_post_on_linkedin_again: {e}"
             raise NonRetryableError(error_message) from e
         else:
-            log.info("create_post_on_linkedin done", result=result)
+            log.info("create_post_on_linkedin_again done", result=result)
 
             return result
