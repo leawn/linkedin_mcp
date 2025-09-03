@@ -36,25 +36,6 @@ class CreatePostInput(BaseModel):
         json_schema_extra={"format": "textarea"}
     )
     
-    author_urn: str = Field(
-        ...,
-        title="LinkedIn Author URN",
-        description="The LinkedIn URN of the person posting. Must follow the format: urn:li:person:{id}",
-        example="urn:li:person:123456789",
-        pattern=r"^urn:li:person:\d+$",
-        json_schema_extra={"format": "urn"},
-    )
-    
-    access_token: str = Field(
-        ...,
-        title="LinkedIn Access Token",
-        description="Valid LinkedIn OAuth 2.0 access token with posting permissions. Must include 'w_member_social' scope for posting.",
-        example="AQX2b_8mK3nJ5pQrT9uVwX7yZ1cD4eF6gH8iJkLmN0oP",
-        min_length=10,
-        json_schema_extra={"format": "password"}
-    )
-    
-    # Optional field with default
     visibility: Optional[str] = Field(
         default="PUBLIC",
         title="Post Visibility",
@@ -74,12 +55,12 @@ def validate_and_use_input(input_data: dict) -> CreatePostInput:
 
 
 def raise_exception(message: str) -> None:
-    log.error("create_post_on_linkedin_again function failed", error=message)
+    log.error("create_post_on_linkedin function failed", error=message)
     raise NonRetryableError(message)
 
 
 @function.defn()
-async def create_post_on_linkedin_again(function_input: CreatePostInput) -> dict[str, Any]:
+async def create_post_on_linkedin(function_input: CreatePostInput) -> dict[str, Any]:
     try:
             if os.environ.get("LINKEDIN_ACCESS_TOKEN") is None:
                 error_message = "LINKEDIN_ACCESS_TOKEN is not set"
@@ -91,16 +72,14 @@ async def create_post_on_linkedin_again(function_input: CreatePostInput) -> dict
 
             access_token=os.environ.get("LINKEDIN_ACCESS_TOKEN")
             author_urn=os.environ.get("LINKEDIN_AUTHOR_URN")
-            function_input.access_token = access_token
-            function_input.author_urn = author_urn
             linkedin_api_url = "https://api.linkedin.com/v2/ugcPosts"
             headers = {
-                "Authorization": f"Bearer {function_input.access_token}",
+                "Authorization": f"Bearer {access_token}",
                 "Content-Type": "application/json",
                 "X-Restli-Protocol-Version": "2.0.0",
             }
             payload = {
-                "author": function_input.author_urn,
+                "author": author_urn,
                 "lifecycleState": "PUBLISHED",
                 "specificContent": {
                     "com.linkedin.ugc.ShareContent": {
@@ -118,7 +97,7 @@ async def create_post_on_linkedin_again(function_input: CreatePostInput) -> dict
                     response.raise_for_status()
                     post_id = response.headers.get("x-restli-id", "Unknown")
     except Exception as e:
-        error_message = f"create_post_on_linkedin_again failed: {e}"
+        error_message = f"create_post_on_linkedin failed: {e}"
         raise NonRetryableError(error_message) from e
     else:
         log.info(f"Successfully created post on LinkedIn with ID: {post_id}")
