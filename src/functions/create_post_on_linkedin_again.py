@@ -9,10 +9,90 @@ from restack_ai.function import NonRetryableError, function, log
 
 load_dotenv()
 
+from pydantic import BaseModel, Field, ValidationError
+from typing import Optional
+
 class CreatePostInput(BaseModel):
-    text: str
-    author_urn: str
-    access_token: str
+    """Input parameters for creating a LinkedIn post.
+    
+    This model defines the required parameters for posting content to LinkedIn
+    through the Restack workflow system.
+    """
+    
+    model_config = {
+        "strict": True,  # Enable strict mode - reject extra fields
+        "extra": "forbid"  # Alternative way to forbid extra fields
+    }
+    
+    text: str = Field(
+        ...,
+        title="Post Content",
+        description="The text content of the LinkedIn post. Should be engaging and professional. Supports hashtags and emojis.",
+        example="Excited to announce our new AI-powered workflow automation platform! 🚀 #AI #Automation #Tech",
+        min_length=1,
+        max_length=3000,
+        json_schema_extra={"format": "textarea"}  # Hint for UI to use textarea
+    )
+    
+    author_urn: str = Field(
+        ...,
+        title="LinkedIn Author URN",
+        description="The LinkedIn URN of the person posting. Must follow the format: urn:li:person:{id}",
+        example="urn:li:person:123456789",
+        pattern=r"^urn:li:person:\d+$",
+        json_schema_extra={"format": "urn"}  # Custom format hint
+    )
+    
+    access_token: str = Field(
+        ...,
+        title="LinkedIn Access Token",
+        description="Valid LinkedIn OAuth 2.0 access token with posting permissions. Must include 'w_member_social' scope for posting.",
+        example="AQX2b_8mK3nJ5pQrT9uVwX7yZ1cD4eF6gH8iJkLmN0oP",
+        min_length=10,
+        json_schema_extra={"format": "password"}  # Hint for UI to mask input
+    )
+    
+    # Optional fields for enhanced functionality
+    visibility: Optional[str] = Field(
+        default="PUBLIC",
+        title="Post Visibility",
+        description="Visibility setting for the post",
+        enum=["PUBLIC", "CONNECTIONS"],
+        json_schema_extra={"default": "PUBLIC"}
+    )
+
+    class Config:
+        """Pydantic configuration for enhanced validation and documentation."""
+        
+        # Enable strict validation
+        validate_assignment = True
+        
+        # Custom error messages
+        error_msg_templates = {
+            "value_error.const": "Field must be exactly {allowed_value}",
+            "value_error.regex": "Field must match pattern: {pattern}",
+        }
+        
+        # Rich examples for documentation
+        schema_extra = {
+            "example": {
+                "text": "Just shipped a new feature that will revolutionize how developers build AI workflows! #OpenSource #AI",
+                "author_urn": "urn:li:person:123456789", 
+                "access_token": "AQX2b_8mK3nJ5pQrT9uVwX7yZ1cD4eF6gH8iJkLmN0oP",
+                "visibility": "PUBLIC"
+            },
+            "description": "Complete example showing all fields with realistic values"
+        }
+
+# Usage with validation
+def validate_and_use_input(input_data: dict) -> CreatePostInput:
+    """Validate input data and return typed model."""
+    try:
+        # This will raise ValidationError if extra fields are provided (strict mode)
+        validated_input = CreatePostInput.model_validate(input_data)
+        return validated_input
+    except ValidationError as e:
+        raise ValueError(f"Invalid input: {e}") from e
 
 
 def raise_exception(message: str) -> None:
