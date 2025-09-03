@@ -13,8 +13,8 @@ with import_functions():
     from src.functions.create_post_on_linkedin import CreatePostInput, create_post_on_linkedin
 
 
-@workflow.defn()
-class CreatePostOnLinkedin:
+@workflow.defn(description="Create a post on LinkedIn")
+class CreatePostOnLinkedinWorkflow:
     @workflow.run
     async def run(self, workflow_input: CreatePostInput) -> dict[str, Any]:
         log.info("CreatePostOnLinkedinWorkflow started")
