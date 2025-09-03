@@ -20,7 +20,7 @@ def raise_exception(message: str) -> None:
     raise NonRetryableError(message)
 
 
-@function.defn(description="Create a post on LinkedIn. This is a function")
+@function.defn()
 async def create_post_on_linkedin(function_input: CreatePostInput) -> dict[str, Any]:
     try:
             if os.environ.get("LINKEDIN_ACCESS_TOKEN") is None:
