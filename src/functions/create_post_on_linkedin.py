@@ -35,13 +35,6 @@ class CreatePostInput(BaseModel):
         max_length=3000,
         json_schema_extra={"format": "textarea"}
     )
-    
-    visibility: Optional[str] = Field(
-        default="PUBLIC",
-        title="Post Visibility",
-        description="Visibility setting for the post",
-        enum=["PUBLIC", "CONNECTIONS"],
-    )
 
 # Usage with validation
 def validate_and_use_input(input_data: dict) -> CreatePostInput:
