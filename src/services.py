@@ -7,13 +7,13 @@ from watchfiles import run_process
 
 from src.client import client
 from src.functions.create_post_on_linkedin import create_post_on_linkedin
-from src.workflows.create_post import CreatePostOnLinkedin
+from src.workflows.create_post import CreatePostOnLinkedinWorkflow
 
 
 async def main() -> None:
     await client.start_service(
         agents=[],
-        workflows=[CreatePostOnLinkedin],
+        workflows=[CreatePostOnLinkedinWorkflow],
         functions=[create_post_on_linkedin],
     )
 
