@@ -10,7 +10,7 @@ from restack_ai.workflow import (
 )
 
 with import_functions():
-    from src.functions.create_post_on_linkedin import CreatePostInput, create_post_on_linkedin
+    from src.functions.create_post_on_linkedin import CreatePostInput, create_post_on_linkedin_again
 
 
 @workflow.defn(description="Create a post on LinkedIn")
@@ -20,7 +20,7 @@ class CreatePostOnLinkedinWorkflow:
         log.info("CreatePostOnLinkedinWorkflow started")
         try:
             result = await workflow.step(
-                function=create_post_on_linkedin,
+                function=create_post_on_linkedin_again,
                 function_input=CreatePostInput(text=workflow_input.text, author_urn=workflow_input.author_urn, access_token=workflow_input.access_token),
                 start_to_close_timeout=timedelta(seconds=120),
             )
