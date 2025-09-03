@@ -10,7 +10,6 @@ from restack_ai.function import NonRetryableError, function, log
 load_dotenv()
 
 from pydantic import BaseModel, Field, ValidationError
-from typing import Optional
 
 class CreatePostInput(BaseModel):
     """Input parameters for creating a LinkedIn post.
