@@ -20,8 +20,10 @@ class CreatePostInput(BaseModel):
     """
     
     model_config = {
-        "strict": True,  # Enable strict mode - reject extra fields
-        "extra": "forbid"  # Alternative way to forbid extra fields
+        "strict": True,                    # Enable strict mode
+        "extra": "forbid",                 # Reject extra fields (makes it strict)
+        "validate_assignment": True,       # Validate on assignment
+        "str_strip_whitespace": True,      # Strip whitespace from strings
     }
     
     text: str = Field(
@@ -31,7 +33,7 @@ class CreatePostInput(BaseModel):
         example="Excited to announce our new AI-powered workflow automation platform! 🚀 #AI #Automation #Tech",
         min_length=1,
         max_length=3000,
-        json_schema_extra={"format": "textarea"}  # Hint for UI to use textarea
+        json_schema_extra={"format": "textarea"}
     )
     
     author_urn: str = Field(
@@ -40,7 +42,7 @@ class CreatePostInput(BaseModel):
         description="The LinkedIn URN of the person posting. Must follow the format: urn:li:person:{id}",
         example="urn:li:person:123456789",
         pattern=r"^urn:li:person:\d+$",
-        json_schema_extra={"format": "urn"}  # Custom format hint
+        json_schema_extra={"format": "urn"},
     )
     
     access_token: str = Field(
@@ -49,40 +51,16 @@ class CreatePostInput(BaseModel):
         description="Valid LinkedIn OAuth 2.0 access token with posting permissions. Must include 'w_member_social' scope for posting.",
         example="AQX2b_8mK3nJ5pQrT9uVwX7yZ1cD4eF6gH8iJkLmN0oP",
         min_length=10,
-        json_schema_extra={"format": "password"}  # Hint for UI to mask input
+        json_schema_extra={"format": "password"}
     )
     
-    # Optional fields for enhanced functionality
+    # Optional field with default
     visibility: Optional[str] = Field(
         default="PUBLIC",
         title="Post Visibility",
         description="Visibility setting for the post",
         enum=["PUBLIC", "CONNECTIONS"],
-        json_schema_extra={"default": "PUBLIC"}
     )
-
-    class Config:
-        """Pydantic configuration for enhanced validation and documentation."""
-        
-        # Enable strict validation
-        validate_assignment = True
-        
-        # Custom error messages
-        error_msg_templates = {
-            "value_error.const": "Field must be exactly {allowed_value}",
-            "value_error.regex": "Field must match pattern: {pattern}",
-        }
-        
-        # Rich examples for documentation
-        schema_extra = {
-            "example": {
-                "text": "Just shipped a new feature that will revolutionize how developers build AI workflows! #OpenSource #AI",
-                "author_urn": "urn:li:person:123456789", 
-                "access_token": "AQX2b_8mK3nJ5pQrT9uVwX7yZ1cD4eF6gH8iJkLmN0oP",
-                "visibility": "PUBLIC"
-            },
-            "description": "Complete example showing all fields with realistic values"
-        }
 
 # Usage with validation
 def validate_and_use_input(input_data: dict) -> CreatePostInput:
