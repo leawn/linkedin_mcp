@@ -17,6 +17,7 @@ async def main() -> None:
         functions=[create_post_on_linkedin],
     )
 
+# demo purposes
 
 def run_services() -> None:
     try:
