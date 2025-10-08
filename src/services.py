@@ -8,13 +8,29 @@ from watchfiles import run_process
 from src.client import client
 from src.functions.create_post_on_linkedin import create_post_on_linkedin
 from src.workflows.create_post import CreatePostOnLinkedinWorkflow
+from src.functions.get_linkedin_profile import get_linkedin_profile
+from src.workflows.get_linkedin_profile import GetLinkedinProfileWorkflow
+from src.functions.get_linkedin_profile_posts import get_linkedin_profile_posts
+from src.workflows.get_linkedin_profile_posts import GetLinkedinProfilePostsWorkflow
+from src.functions.get_linkedin_profile_reactions import get_linkedin_profile_reactions
+from src.workflows.get_linkedin_profile_reactions import GetLinkedinProfileReactionsWorkflow
 
 
 async def main() -> None:
     await client.start_service(
         agents=[],
-        workflows=[CreatePostOnLinkedinWorkflow],
-        functions=[create_post_on_linkedin],
+        workflows=[
+            CreatePostOnLinkedinWorkflow,
+            GetLinkedinProfileWorkflow,
+            GetLinkedinProfilePostsWorkflow,
+            GetLinkedinProfileReactionsWorkflow,
+        ],
+        functions=[
+            create_post_on_linkedin,
+            get_linkedin_profile,
+            get_linkedin_profile_posts,
+            get_linkedin_profile_reactions,
+        ],
     )
 
 # demo purposes
