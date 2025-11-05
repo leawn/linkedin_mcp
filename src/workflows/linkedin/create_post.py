@@ -9,7 +9,10 @@ from restack_ai.workflow import (
 )
 
 with import_functions():
-    from src.functions.create_post_on_linkedin import CreatePostInput, create_post_on_linkedin
+    from src.functions.linkedin.create_post import (
+        CreatePostInput,
+        create_post_on_linkedin,
+    )
 
 
 @workflow.defn(description="Create a post on LinkedIn")

@@ -28,18 +28,18 @@ class GetReactionsInput(BaseModel):
 
 
 def raise_exception(message: str) -> None:
-    log.error("get_linkedin_profile_reactions function failed", error=message)
+    log.error("get_linkedin_profile_reactions_brightdata function failed", error=message)
     raise NonRetryableError(message)
 
 
 @function.defn()
-async def get_linkedin_profile_reactions(function_input: GetReactionsInput) -> dict[str, Any]:
+async def get_linkedin_profile_reactions_brightdata(function_input: GetReactionsInput) -> dict[str, Any]:
     """
     NOTE: Scraping reactions is a complex, multi-step task (get posts, then get
     reactions for each post) that requires a more advanced scraping solution.
     This functionality is not implemented in this version.
     """
-    log.warn("get_linkedin_profile_reactions is not implemented.")
+    log.warn("get_linkedin_profile_reactions_brightdata is not implemented.")
     raise NonRetryableError(
         "Scraping reactions from a LinkedIn profile is a premium feature "
         "and is not yet supported in this implementation."

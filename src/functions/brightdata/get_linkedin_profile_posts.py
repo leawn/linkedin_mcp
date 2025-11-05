@@ -28,7 +28,7 @@ class GetProfilePostsInput(BaseModel):
 
 
 def raise_exception(message: str) -> None:
-    log.error("get_linkedin_profile_posts function failed", error=message)
+    log.error("get_linkedin_profile_posts_brightdata function failed", error=message)
     raise NonRetryableError(message)
 
 
@@ -43,7 +43,7 @@ def construct_activity_url(profile_url: str) -> str:
 
 
 @function.defn()
-async def get_linkedin_profile_posts(function_input: GetProfilePostsInput) -> dict[str, Any]:
+async def get_linkedin_profile_posts_brightdata(function_input: GetProfilePostsInput) -> dict[str, Any]:
     try:
         api_token = os.environ.get("BRIGHT_DATA_API_TOKEN")
         if not api_token:
@@ -86,7 +86,7 @@ async def get_linkedin_profile_posts(function_input: GetProfilePostsInput) -> di
             raise_exception("Failed to download posts data from Bright Data snapshot.")
 
     except Exception as e:
-        error_message = f"get_linkedin_profile_posts failed: {e}"
+        error_message = f"get_linkedin_profile_posts_brightdata failed: {e}"
         raise NonRetryableError(error_message) from e
     else:
         log.info(f"Successfully discovered posts for {profile_url}")
