@@ -2,7 +2,6 @@ import asyncio
 import logging
 import webbrowser
 from pathlib import Path
-import os
 
 from watchfiles import run_process
 
