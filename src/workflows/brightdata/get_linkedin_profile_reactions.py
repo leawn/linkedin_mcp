@@ -17,7 +17,7 @@ with import_functions():
     )
 
 
-@workflow.defn(description="Get a LinkedIn profile's reactions (Not Implemented)", mcp=True)
+@workflow.defn(description="Get a LinkedIn profile's reactions (Not Implemented)")
 class GetLinkedinProfileReactionsWorkflowBrightdata:
     @workflow.run
     async def run(self, workflow_input: GetReactionsInput) -> Any:

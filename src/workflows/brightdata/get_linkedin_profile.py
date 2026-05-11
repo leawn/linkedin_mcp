@@ -20,7 +20,7 @@ with import_functions():
     )
 
 
-@workflow.defn(description="Get a LinkedIn profile", mcp=True)
+@workflow.defn(description="Get a LinkedIn profile")
 class GetLinkedinProfileWorkflowBrightdata:
     @workflow.run
     async def run(self, workflow_input: GetProfileInput) -> Any:
