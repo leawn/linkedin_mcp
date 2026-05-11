@@ -17,7 +17,7 @@ with import_functions():
     )
 
 
-@workflow.defn(description="Create a post on LinkedIn")
+@workflow.defn(description="Create a post on LinkedIn", mcp=True)
 class CreatePostOnLinkedinWorkflow:
     @workflow.run
     async def run(self, workflow_input: CreatePostInput) -> dict[str, Any]:

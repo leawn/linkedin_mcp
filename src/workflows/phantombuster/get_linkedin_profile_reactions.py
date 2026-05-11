@@ -17,7 +17,7 @@ with import_functions():
     )
 
 
-@workflow.defn(description="Get a LinkedIn profile's reactions using Phantombuster")
+@workflow.defn(description="Get a LinkedIn profile's reactions using Phantombuster", mcp=True)
 class GetLinkedinProfileReactionsWorkflowPhantombuster:
     @workflow.run
     async def run(self, workflow_input: GetProfileReactionsInput) -> dict[str, Any]:

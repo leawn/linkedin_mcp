@@ -16,7 +16,7 @@ with import_functions():
         save_linkedin_lead_phantombuster,
     )
 
-@workflow.defn(description="Save a LinkedIn lead to Phantombuster storage.")
+@workflow.defn(description="Save a LinkedIn lead to Phantombuster storage.", mcp=True)
 class SaveLinkedinLeadWorkflowPhantombuster:
     @workflow.run
     async def run(self, workflow_input: SaveLeadInput) -> dict[str, Any]:
