@@ -31,6 +31,11 @@ from src.functions.phantombuster.get_linkedin_profile_posts import get_linkedin_
 from src.workflows.phantombuster.get_linkedin_profile_posts import GetLinkedinProfilePostsWorkflowPhantombuster
 from src.functions.phantombuster.get_linkedin_profile_reactions import get_linkedin_profile_reactions_phantombuster
 from src.workflows.phantombuster.get_linkedin_profile_reactions import GetLinkedinProfileReactionsWorkflowPhantombuster
+from src.functions.phantombuster.get_linkedin_jobs_search import get_linkedin_jobs_search_phantombuster
+from src.workflows.phantombuster.get_linkedin_jobs_search import GetLinkedinJobsSearchWorkflowPhantombuster
+from src.functions.phantombuster.get_linkedin_job_details import get_linkedin_job_details_phantombuster
+from src.workflows.phantombuster.get_linkedin_job_details import GetLinkedinJobDetailsWorkflowPhantombuster
+from src.workflows.phantombuster.scrape_linkedin_jobs import ScrapeLinkedinJobsWorkflowPhantombuster
 from src.functions.phantombuster.save_linkedin_lead import save_linkedin_lead_phantombuster
 from src.workflows.phantombuster.save_linkedin_lead import SaveLinkedinLeadWorkflowPhantombuster
 
@@ -42,6 +47,9 @@ async def main() -> None:
         GetLinkedinProfileWorkflowPhantombuster,
         GetLinkedinProfilePostsWorkflowPhantombuster,
         GetLinkedinProfileReactionsWorkflowPhantombuster,
+        GetLinkedinJobsSearchWorkflowPhantombuster,
+        GetLinkedinJobDetailsWorkflowPhantombuster,
+        ScrapeLinkedinJobsWorkflowPhantombuster,
         SaveLinkedinLeadWorkflowPhantombuster,
         # Brightdata
         GetLinkedinProfileWorkflowBrightdata,
@@ -54,6 +62,8 @@ async def main() -> None:
         get_linkedin_profile_phantombuster,
         get_linkedin_profile_posts_phantombuster,
         get_linkedin_profile_reactions_phantombuster,
+        get_linkedin_jobs_search_phantombuster,
+        get_linkedin_job_details_phantombuster,
         save_linkedin_lead_phantombuster,
         # Brightdata
         get_linkedin_profile_brightdata,
