@@ -40,10 +40,6 @@ async def get_linkedin_jobs_search_phantombuster(function_input: GetJobsSearchIn
         if not api_key:
             raise_exception("PHANTOMBUSTER_API_KEY is not set")
 
-        session_cookie = os.environ.get("LINKEDIN_SESSION_COOKIE")
-        if not session_cookie:
-            raise_exception("LINKEDIN_SESSION_COOKIE is not set")
-
         headers = {
             "X-Phantombuster-Key-1": api_key,
             "Content-Type": "application/json",
@@ -53,24 +49,24 @@ async def get_linkedin_jobs_search_phantombuster(function_input: GetJobsSearchIn
         if not agent_id:
             raise_exception("PHANTOMBUSTER_JOBS_SEARCH_AGENT_ID is not set")
 
-        argument = {
-            "sessionCookie": session_cookie,
-            "searches": function_input.search_url,
-            "category": "jobs",
-            "numberOfResultsPerLaunch": 100,
-            "numberOfResultsPerSearch": 100,
+        # Only override the search URL for this launch. Everything else
+        # (identity/sessionCookie, category, result counts, searchType) comes
+        # from the Phantom's saved setup via bonusArgument merge semantics.
+        bonus_argument = {
+            "linkedInSearchUrl": function_input.search_url,
         }
 
         async with httpx.AsyncClient() as client:
             log.info(f"Initiating LinkedIn jobs search export for {function_input.search_url}")
-            launch_url = f"https://api.phantombuster.com/api/v1/agent/{agent_id}/launch"
-            response = await client.post(launch_url, headers=headers, json={"argument": argument})
+            launch_url = "https://api.phantombuster.com/api/v2/agents/launch"
+            payload = {"id": agent_id, "bonusArgument": bonus_argument}
+            response = await client.post(launch_url, headers=headers, json=payload)
             response.raise_for_status()
 
             response_json = response.json()
             log.info(f"Phantombuster launch response: {response_json}")
 
-            container_id = response_json.get("data", {}).get("containerId")
+            container_id = response_json.get("containerId") or response_json.get("data", {}).get("containerId")
             if not container_id:
                 raise_exception("Failed to get containerId from Phantombuster launch response.")
 

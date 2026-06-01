@@ -70,9 +70,11 @@ class ScrapeLinkedinJobsWorkflowPhantombuster:
             if not job_urls:
                 raise NonRetryableError("No LinkedIn job URLs found in Phantombuster search result.")
 
+            # Single job per call for now: scrape details for the first job found.
+            first_job_url = job_urls[0]
             details_result = await workflow.step(
                 function=get_linkedin_job_details_phantombuster,
-                function_input=GetJobDetailsInput(job_urls=job_urls),
+                function_input=GetJobDetailsInput(job_url=first_job_url),
                 start_to_close_timeout=timedelta(seconds=600),
                 task_queue=TASK_QUEUE,
             )
@@ -80,7 +82,12 @@ class ScrapeLinkedinJobsWorkflowPhantombuster:
             error_message = f"Error during scrape_linkedin_jobs_phantombuster: {e}"
             raise NonRetryableError(error_message) from e
         else:
-            result = {"search": search_result, "jobUrls": job_urls, "details": details_result}
+            result = {
+                "search": search_result,
+                "jobUrls": job_urls,
+                "scrapedJobUrl": first_job_url,
+                "details": details_result,
+            }
             log.info("scrape_linkedin_jobs_phantombuster done", result=result)
 
             return result

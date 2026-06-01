@@ -25,7 +25,7 @@ class GetLinkedinJobDetailsWorkflowPhantombuster:
         try:
             result = await workflow.step(
                 function=get_linkedin_job_details_phantombuster,
-                function_input=GetJobDetailsInput(job_urls=workflow_input.job_urls),
+                function_input=GetJobDetailsInput(job_url=workflow_input.job_url),
                 start_to_close_timeout=timedelta(seconds=600),
                 task_queue=TASK_QUEUE,
             )
