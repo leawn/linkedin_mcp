@@ -61,7 +61,29 @@ async def get_linkedin_job_details_phantombuster(function_input: GetJobDetailsIn
             log.info(f"Initiating LinkedIn job details scrape for {function_input.job_url}")
             launch_url = "https://api.phantombuster.com/api/v2/agents/launch"
             payload = {"id": agent_id, "bonusArgument": bonus_argument}
-            response = await client.post(launch_url, headers=headers, json=payload)
+
+            # Phantombuster rate-limits /agents/launch (429). Back off and retry
+            # instead of failing the whole workflow on a transient throttle.
+            max_launch_attempts = 5
+            response = None
+            for attempt in range(1, max_launch_attempts + 1):
+                response = await client.post(launch_url, headers=headers, json=payload)
+                if response.status_code != 429:
+                    break
+
+                retry_after = response.headers.get("Retry-After")
+                wait_seconds = float(retry_after) if retry_after else min(60, 5 * 2 ** (attempt - 1))
+                if attempt == max_launch_attempts:
+                    raise_exception(
+                        f"Phantombuster launch rate-limited (429) after {max_launch_attempts} attempts. "
+                        "The agent may already be running or the plan launch quota is exhausted."
+                    )
+                log.warning(
+                    f"Phantombuster launch rate-limited (429). Attempt {attempt}/{max_launch_attempts}, "
+                    f"retrying in {wait_seconds}s"
+                )
+                await asyncio.sleep(wait_seconds)
+
             response.raise_for_status()
 
             response_json = response.json()
