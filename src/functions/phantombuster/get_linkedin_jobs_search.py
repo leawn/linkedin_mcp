@@ -114,6 +114,20 @@ async def get_linkedin_jobs_search_phantombuster(function_input: GetJobsSearchIn
 
                 await asyncio.sleep(5)
 
+            # The resultObject on containers/fetch can lag behind the "finished"
+            # status (returning null even though the run succeeded). Pull it from
+            # the dedicated endpoint and retry briefly until it is available.
+            if result_object is None:
+                result_url = f"https://api.phantombuster.com/api/v2/containers/fetch-result-object?id={container_id}"
+                for attempt in range(1, 6):
+                    result_response = await client.get(result_url, headers=headers)
+                    result_response.raise_for_status()
+                    result_object = result_response.json().get("resultObject")
+                    if result_object is not None:
+                        break
+                    log.info(f"resultObject not ready yet (attempt {attempt}/5), retrying in 3s")
+                    await asyncio.sleep(3)
+
             log.info(f"Phantombuster job for container {container_id} finished successfully.")
             return {"status": "success", "containerId": container_id, "resultObject": result_object}
 
