@@ -20,12 +20,13 @@ with import_functions():
 @workflow.defn(description="Get LinkedIn jobs search results using Phantombuster", mcp=True)
 class GetLinkedinJobsSearchWorkflowPhantombuster:
     @workflow.run
-    async def run(self, workflow_input: GetJobsSearchInput) -> dict[str, Any]:
+    async def run(self, workflow_input: GetJobsSearchInput | None = None) -> dict[str, Any]:
         log.info("GetLinkedinJobsSearchWorkflowPhantombuster started")
         try:
+            search_url = workflow_input.search_url if workflow_input else None
             result = await workflow.step(
                 function=get_linkedin_jobs_search_phantombuster,
-                function_input=GetJobsSearchInput(search_url=workflow_input.search_url),
+                function_input=GetJobsSearchInput(search_url=search_url),
                 start_to_close_timeout=timedelta(seconds=300),
                 task_queue=TASK_QUEUE,
             )

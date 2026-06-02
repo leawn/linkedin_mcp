@@ -56,12 +56,13 @@ def _extract_job_urls(result_object: Any) -> list[str]:
 @workflow.defn(description="Scrape LinkedIn job search results and job details using Phantombuster", mcp=True)
 class ScrapeLinkedinJobsWorkflowPhantombuster:
     @workflow.run
-    async def run(self, workflow_input: GetJobsSearchInput) -> dict[str, Any]:
+    async def run(self, workflow_input: GetJobsSearchInput | None = None) -> dict[str, Any]:
         log.info("ScrapeLinkedinJobsWorkflowPhantombuster started")
         try:
+            search_url = workflow_input.search_url if workflow_input else None
             search_result = await workflow.step(
                 function=get_linkedin_jobs_search_phantombuster,
-                function_input=GetJobsSearchInput(search_url=workflow_input.search_url),
+                function_input=GetJobsSearchInput(search_url=search_url),
                 start_to_close_timeout=timedelta(seconds=300),
                 task_queue=TASK_QUEUE,
             )
