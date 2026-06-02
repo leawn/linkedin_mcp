@@ -20,10 +20,13 @@ class GetJobsSearchInput(BaseModel):
         "str_strip_whitespace": True,
     }
 
-    search_url: str = Field(
-        ...,
+    search_url: str | None = Field(
+        default=None,
         title="LinkedIn Jobs Search URL",
-        description="The LinkedIn jobs search results URL to export.",
+        description=(
+            "Optional LinkedIn jobs search results URL to export. When omitted, the "
+            "Phantom runs with its saved default input (e.g. a Google Sheet of search URLs)."
+        ),
         example="https://www.linkedin.com/jobs/search-results/?keywords=forward%20deployed%20engineer",
     )
 
@@ -49,17 +52,20 @@ async def get_linkedin_jobs_search_phantombuster(function_input: GetJobsSearchIn
         if not agent_id:
             raise_exception("PHANTOMBUSTER_JOBS_SEARCH_AGENT_ID is not set")
 
-        # Only override the search URL for this launch. Everything else
-        # (identity/sessionCookie, category, result counts, searchType) comes
-        # from the Phantom's saved setup via bonusArgument merge semantics.
-        bonus_argument = {
-            "linkedInSearchUrl": function_input.search_url,
-        }
+        # Launch with the Phantom's saved default input (e.g. a Google Sheet of
+        # search URLs). If a specific search_url is provided, override only that
+        # field for this launch via bonusArgument merge semantics; everything else
+        # (identity/sessionCookie, category, result counts, searchType) is inherited.
+        payload: dict[str, Any] = {"id": agent_id}
+        if function_input.search_url:
+            payload["bonusArgument"] = {"linkedInSearchUrl": function_input.search_url}
 
         async with httpx.AsyncClient() as client:
-            log.info(f"Initiating LinkedIn jobs search export for {function_input.search_url}")
+            log.info(
+                "Initiating LinkedIn jobs search export "
+                + (f"for {function_input.search_url}" if function_input.search_url else "with saved default input")
+            )
             launch_url = "https://api.phantombuster.com/api/v2/agents/launch"
-            payload = {"id": agent_id, "bonusArgument": bonus_argument}
 
             # Phantombuster rate-limits /agents/launch (429). Back off and retry
             # instead of failing the whole workflow on a transient throttle.
