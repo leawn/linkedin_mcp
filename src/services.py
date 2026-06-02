@@ -36,6 +36,12 @@ from src.workflows.phantombuster.get_linkedin_jobs_search import GetLinkedinJobs
 from src.functions.phantombuster.get_linkedin_job_details import get_linkedin_job_details_phantombuster
 from src.workflows.phantombuster.get_linkedin_job_details import GetLinkedinJobDetailsWorkflowPhantombuster
 from src.workflows.phantombuster.scrape_linkedin_jobs import ScrapeLinkedinJobsWorkflowPhantombuster
+from src.functions.phantombuster.launch_linkedin_jobs_search import launch_linkedin_jobs_search_phantombuster
+from src.workflows.phantombuster.launch_linkedin_jobs_search import LaunchLinkedinJobsSearchWorkflowPhantombuster
+from src.functions.phantombuster.get_container_status import get_phantombuster_container_status
+from src.workflows.phantombuster.get_container_status import GetContainerStatusWorkflowPhantombuster
+from src.functions.phantombuster.get_container_result import get_phantombuster_container_result
+from src.workflows.phantombuster.get_container_result import GetContainerResultWorkflowPhantombuster
 from src.functions.phantombuster.save_linkedin_lead import save_linkedin_lead_phantombuster
 from src.workflows.phantombuster.save_linkedin_lead import SaveLinkedinLeadWorkflowPhantombuster
 
@@ -50,6 +56,9 @@ async def main() -> None:
         GetLinkedinJobsSearchWorkflowPhantombuster,
         GetLinkedinJobDetailsWorkflowPhantombuster,
         ScrapeLinkedinJobsWorkflowPhantombuster,
+        LaunchLinkedinJobsSearchWorkflowPhantombuster,
+        GetContainerStatusWorkflowPhantombuster,
+        GetContainerResultWorkflowPhantombuster,
         SaveLinkedinLeadWorkflowPhantombuster,
         # Brightdata
         GetLinkedinProfileWorkflowBrightdata,
@@ -64,6 +73,9 @@ async def main() -> None:
         get_linkedin_profile_reactions_phantombuster,
         get_linkedin_jobs_search_phantombuster,
         get_linkedin_job_details_phantombuster,
+        launch_linkedin_jobs_search_phantombuster,
+        get_phantombuster_container_status,
+        get_phantombuster_container_result,
         save_linkedin_lead_phantombuster,
         # Brightdata
         get_linkedin_profile_brightdata,
