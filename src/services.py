@@ -31,13 +31,12 @@ from src.functions.phantombuster.get_linkedin_profile_posts import get_linkedin_
 from src.workflows.phantombuster.get_linkedin_profile_posts import GetLinkedinProfilePostsWorkflowPhantombuster
 from src.functions.phantombuster.get_linkedin_profile_reactions import get_linkedin_profile_reactions_phantombuster
 from src.workflows.phantombuster.get_linkedin_profile_reactions import GetLinkedinProfileReactionsWorkflowPhantombuster
-from src.functions.phantombuster.get_linkedin_jobs_search import get_linkedin_jobs_search_phantombuster
-from src.workflows.phantombuster.get_linkedin_jobs_search import GetLinkedinJobsSearchWorkflowPhantombuster
-from src.functions.phantombuster.get_linkedin_job_details import get_linkedin_job_details_phantombuster
-from src.workflows.phantombuster.get_linkedin_job_details import GetLinkedinJobDetailsWorkflowPhantombuster
-from src.workflows.phantombuster.scrape_linkedin_jobs import ScrapeLinkedinJobsWorkflowPhantombuster
 from src.functions.phantombuster.launch_linkedin_jobs_search import launch_linkedin_jobs_search_phantombuster
 from src.workflows.phantombuster.launch_linkedin_jobs_search import LaunchLinkedinJobsSearchWorkflowPhantombuster
+from src.functions.phantombuster.launch_linkedin_job_details import launch_linkedin_job_details_phantombuster
+from src.workflows.phantombuster.launch_linkedin_job_details import LaunchLinkedinJobDetailsWorkflowPhantombuster
+from src.functions.phantombuster.launch_linkedin_company_details import launch_linkedin_company_details_phantombuster
+from src.workflows.phantombuster.launch_linkedin_company_details import LaunchLinkedinCompanyDetailsWorkflowPhantombuster
 from src.functions.phantombuster.get_container_status import get_phantombuster_container_status
 from src.workflows.phantombuster.get_container_status import GetContainerStatusWorkflowPhantombuster
 from src.functions.phantombuster.get_container_result import get_phantombuster_container_result
@@ -53,10 +52,9 @@ async def main() -> None:
         GetLinkedinProfileWorkflowPhantombuster,
         GetLinkedinProfilePostsWorkflowPhantombuster,
         GetLinkedinProfileReactionsWorkflowPhantombuster,
-        GetLinkedinJobsSearchWorkflowPhantombuster,
-        GetLinkedinJobDetailsWorkflowPhantombuster,
-        ScrapeLinkedinJobsWorkflowPhantombuster,
         LaunchLinkedinJobsSearchWorkflowPhantombuster,
+        LaunchLinkedinJobDetailsWorkflowPhantombuster,
+        LaunchLinkedinCompanyDetailsWorkflowPhantombuster,
         GetContainerStatusWorkflowPhantombuster,
         GetContainerResultWorkflowPhantombuster,
         SaveLinkedinLeadWorkflowPhantombuster,
@@ -71,9 +69,9 @@ async def main() -> None:
         get_linkedin_profile_phantombuster,
         get_linkedin_profile_posts_phantombuster,
         get_linkedin_profile_reactions_phantombuster,
-        get_linkedin_jobs_search_phantombuster,
-        get_linkedin_job_details_phantombuster,
         launch_linkedin_jobs_search_phantombuster,
+        launch_linkedin_job_details_phantombuster,
+        launch_linkedin_company_details_phantombuster,
         get_phantombuster_container_status,
         get_phantombuster_container_result,
         save_linkedin_lead_phantombuster,
